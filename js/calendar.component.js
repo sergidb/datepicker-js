@@ -319,7 +319,7 @@ class DatePickerJS extends HTMLElement {
             this.selectedDates(date, date);
         }
         
-        this.lastDateClicked = date;
+        if(ev && !ev.shiftKey) this.lastDateClicked = date;
 
     }
 
