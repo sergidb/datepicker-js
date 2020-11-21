@@ -201,6 +201,9 @@ class DatePickerJS extends HTMLElement {
         this.dateInput.onfocus = e => {
             this.dateInput.setSelectionRange(0, this.dateInput.value.length);
         }
+        this.dateInput.onclick = e => {
+            this.dateInput.setSelectionRange(0, this.dateInput.value.length);
+        }
         this.dateInput.onkeyup = e => {
 
             if(!['Backspace', 'Delete'].includes(e.key) && [4,7].includes(this.dateInput.value.length)) this.dateInput.value += '-';
@@ -411,6 +414,15 @@ class DatePickerJS extends HTMLElement {
                 break;
         }
 
+        if (this.onselectionchanged) {
+            this.onselectionchanged({
+                days: this.selectionInterval.count('days'),
+                from: this.selectionInterval.start,
+                to: this.selectionInterval.end,
+                range: this.selectionInterval
+            });
+        }
+
         this.refreshUI();
 
     }
@@ -419,6 +431,8 @@ class DatePickerJS extends HTMLElement {
         this.locale = locale;
         this.refreshUI();
     }
+
+    onselectionchanged(dateFrom, dateTo) {}
 
 }
 

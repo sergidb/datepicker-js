@@ -1,22 +1,292 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calendar</title>
+
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #ffffff;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 900'%3E%3Cdefs%3E%3ClinearGradient id='a' x1='0' x2='0' y1='1' y2='0'%3E%3Cstop offset='0' stop-color='%230FF'/%3E%3Cstop offset='1' stop-color='%23CF6'/%3E%3C/linearGradient%3E%3ClinearGradient id='b' x1='0' x2='0' y1='0' y2='1'%3E%3Cstop offset='0' stop-color='%23F00'/%3E%3Cstop offset='1' stop-color='%23FC0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg fill='%23FFF' fill-opacity='0' stroke-miterlimit='10'%3E%3Cg stroke='url(%23a)' stroke-width='2'%3E%3Cpath transform='translate(0 0)' d='M1409 581 1450.35 511 1490 581z'/%3E%3Ccircle stroke-width='4' transform='rotate(0 800 450)' cx='500' cy='100' r='40'/%3E%3Cpath transform='translate(0 0)' d='M400.86 735.5h-83.73c0-23.12 18.74-41.87 41.87-41.87S400.86 712.38 400.86 735.5z'/%3E%3C/g%3E%3Cg stroke='url(%23b)' stroke-width='4'%3E%3Cpath transform='translate(0 0)' d='M149.8 345.2 118.4 389.8 149.8 434.4 181.2 389.8z'/%3E%3Crect stroke-width='8' transform='rotate(0 1089 759)' x='1039' y='709' width='100' height='100'/%3E%3Cpath transform='rotate(0 1400 132)' d='M1426.8 132.4 1405.7 168.8 1363.7 168.8 1342.7 132.4 1363.7 96 1405.7 96z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            background-attachment: fixed;
+            background-size: cover;
+        }
+
+        .grid {
+            font-family: Arial, Helvetica, sans-serif;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto 1fr;
+
+            width: 700px;
+            height: 400px;
+
+            padding: 20px;
+
+            background: white;
+        }
+
+        h1 {
+            margin: 5px;
+        }
+
+        ul {
+            overflow-y: auto;
+            padding: 0;
+        }
+
+        li {
+            margin: 2px;
+            display: flex;
+            flex-direction: column;
+            border-bottom: 1px solid #EEE;
+            padding: 5px;
+        }
+
+        li span {
+            margin: 4px;
+            text-transform: capitalize;
+        }
+
+        li span:first-child {
+            font-weight: bold;
+
+        }
+
+        .shadow {
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+            transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
+        }
+
+        datepicker-js {
+            grid-row: span 2;
+            margin: 0 auto;
+        }
+    </style>
+
 </head>
+
 <body>
-    
-    <datepicker-js></datepicker-js>
+
+    <div class="grid shadow">
+        <h1>Orders</h1>
+        <datepicker-js></datepicker-js>
+        <ul></ul>
+    </div>
+
 
     <script src="js/luxon.min.js"></script>
     <script src="js/calendar.component.js"></script>
 
     <script>
+        const fakeData = [{
+                "_id": "5fb951952a16098639af8cdf",
+                "name": "Walls Beck",
+                "phone": "(825) 503-3602",
+                "article": "oranges",
+                "quantity": 10
+            },
+            {
+                "_id": "5fb951955fab7441e44e3b7f",
+                "name": "Jill Lopez",
+                "phone": "(819) 404-3234",
+                "article": "chocolate",
+                "quantity": 6
+            },
+            {
+                "_id": "5fb951959e6caa916f2aa631",
+                "name": "Holmes Perry",
+                "phone": "(912) 526-2000",
+                "article": "coke",
+                "quantity": 2
+            },
+            {
+                "_id": "5fb95195c0d7165f90d661f9",
+                "name": "Beatriz Copeland",
+                "phone": "(943) 508-3834",
+                "article": "oranges",
+                "quantity": 2
+            },
+            {
+                "_id": "5fb951955db316151b99509f",
+                "name": "Britt Ford",
+                "phone": "(863) 533-3491",
+                "article": "oranges",
+                "quantity": 5
+            },
+            {
+                "_id": "5fb9519572d35c2be23ec8e0",
+                "name": "Abbott Drake",
+                "phone": "(879) 480-3316",
+                "article": "chocolate",
+                "quantity": 6
+            },
+            {
+                "_id": "5fb951959d32b47bb56a9ce1",
+                "name": "Church Marsh",
+                "phone": "(878) 500-3978",
+                "article": "water",
+                "quantity": 7
+            },
+            {
+                "_id": "5fb951956f8159e9ed625909",
+                "name": "Meyers Calderon",
+                "phone": "(944) 574-2151",
+                "article": "oranges",
+                "quantity": 4
+            },
+            {
+                "_id": "5fb951956c624a29f987d367",
+                "name": "Jasmine Thomas",
+                "phone": "(991) 587-2809",
+                "article": "oranges",
+                "quantity": 2
+            },
+            {
+                "_id": "5fb95195e63e80c136cbd5be",
+                "name": "Slater Massey",
+                "phone": "(987) 599-3789",
+                "article": "coke",
+                "quantity": 2
+            },
+            {
+                "_id": "5fb95195973464440e68a582",
+                "name": "Dudley Griffin",
+                "phone": "(984) 538-3744",
+                "article": "coke",
+                "quantity": 7
+            },
+            {
+                "_id": "5fb951953c13f00a2b1c119e",
+                "name": "Howell Duffy",
+                "phone": "(837) 487-3456",
+                "article": "coke",
+                "quantity": 3
+            },
+            {
+                "_id": "5fb95195058ab56bf67c50d3",
+                "name": "Corrine Walters",
+                "phone": "(968) 587-3115",
+                "article": "coke",
+                "quantity": 3
+            },
+            {
+                "_id": "5fb951950999b8264eeed886",
+                "name": "Pierce Daugherty",
+                "phone": "(966) 483-2054",
+                "article": "coke",
+                "quantity": 5
+            },
+            {
+                "_id": "5fb951956d759369901db3ed",
+                "name": "Bradley Rogers",
+                "phone": "(848) 584-3093",
+                "article": "chocolate",
+                "quantity": 2
+            },
+            {
+                "_id": "5fb95195d823450e3b20b0ee",
+                "name": "Reyna David",
+                "phone": "(884) 500-2410",
+                "article": "chocolate",
+                "quantity": 5
+            },
+            {
+                "_id": "5fb95195384d6c6edfccfc1b",
+                "name": "Rachael Warren",
+                "phone": "(985) 507-2385",
+                "article": "chocolate",
+                "quantity": 8
+            },
+            {
+                "_id": "5fb951958a50421de4d4986d",
+                "name": "Powers Gallegos",
+                "phone": "(830) 457-2715",
+                "article": "oranges",
+                "quantity": 2
+            },
+            {
+                "_id": "5fb951958a033a3ac0c7fbec",
+                "name": "Sarah Miranda",
+                "phone": "(979) 423-2035",
+                "article": "oranges",
+                "quantity": 2
+            },
+            {
+                "_id": "5fb95195bb19fb93e2f552e2",
+                "name": "Myrna Frost",
+                "phone": "(811) 487-2374",
+                "article": "oranges",
+                "quantity": 3
+            }
+        ];
+
+        const ul = document.querySelector('ul');
+        fakeData.forEach(x => {
+            x.date = luxon.DateTime.local().startOf('day').minus({days: randomOf5()});
+        });
+
         let datepicker = document.querySelector('datepicker-js');
-        datepicker.selectedDates(luxon.DateTime.local(),luxon.DateTime.local());
+        datepicker.selectedDates(luxon.DateTime.local(), luxon.DateTime.local());
         datepicker.setLocale('en');
+
+        renderList([]);
+
+        datepicker.onselectionchanged = e => {
+            removeAllChildren(ul);
+            let items = fakeData.filter(x => e.range.contains(x.date) || e.to.equals(x.date));
+            renderList(items);
+        }
+
+        function removeAllChildren(parent) {
+            while (parent.firstChild) {
+                parent.removeChild(parent.firstChild);
+            }
+        }
+
+        function randomOf5() {
+            return Math.floor(Math.random() * 6);
+        }
+
+        function renderList(items) {
+            removeAllChildren(ul);
+            items.forEach(x => {
+                let li = document.createElement('li');
+
+                let article = document.createElement('span');
+                article.innerText = `${x.quantity}x ${x.article}`;
+                li.appendChild(article);
+
+                let name = document.createElement('span');
+                name.innerText = `${x.name} - ${x.date.toISODate()}`;
+                li.appendChild(name);
+
+                ul.appendChild(li);
+            });
+
+            if (items.length == 0) {
+                let li = document.createElement('li');
+                let span = document.createElement('span');
+                span.innerText = `No orders for the selected date`;
+                li.appendChild(span);
+                console.log('holas');
+                ul.appendChild(li);
+            }
+
+        }
+
     </script>
 
 </body>
+
 </html>
