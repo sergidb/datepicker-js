@@ -3,7 +3,13 @@ DatePickerJS is a lightweigth calendar shaped WebComponent written in pure JS th
 
 ## Why do I have created this?
 
-For a work project, I needed a calendar shaped control for web and most of the components I found on the web were usign jQuery or didn't suit my needs. So I created this.
+For a work project, I needed a calendar shaped control for web and most of the components I found on the web were usign jQuery or didn't suit my needs. So I created this one.
+
+![](examples/gifs/full.gif)
+
+Tips:
+- After write the date on the input, press <kbd>tab</kbd> or <kbd>enter</kbd>.
+- To select a range of dates hold <kbd>shift</kbd> for the second click.
 
 ## How to install
 
@@ -65,7 +71,8 @@ let datepicker = document.querySelector('datepicker-js');
       datepicker.setLocale(localeTwoChars: string);
       ```
 
+## Bugs and Suggestions (🐛📝)
+- Contact me by twitter [@sergidb](https://twitter.com/sergidome)
+
 ## Thanks
 - Luxon: https://moment.github.io/luxon/
-
-##
