@@ -72,6 +72,15 @@
             grid-row: span 2;
             margin: 0 auto;
         }
+
+        .no-items {
+            text-transform: initial;
+            text-align: center;
+            color: #777;
+            font-weight: normal;
+            font-style: italic;
+        }
+
     </style>
 
 </head>
@@ -278,8 +287,8 @@
                 let li = document.createElement('li');
                 let span = document.createElement('span');
                 span.innerText = `No orders for the selected date`;
+                span.classList.add('no-items');
                 li.appendChild(span);
-                console.log('holas');
                 ul.appendChild(li);
             }
 
