@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar</title>
+</head>
+<body>
+    
+    <datepicker-js></datepicker-js>
+
+    <script src="js/luxon.min.js"></script>
+    <script src="js/calendar.component.js"></script>
+
+    <script>
+        let datepicker = document.querySelector('datepicker-js');
+        datepicker.selectedDates(luxon.DateTime.local(),luxon.DateTime.local());
+        console.log(datepicker.selectedDates());
+
+    </script>
+
+</body>
+</html>
