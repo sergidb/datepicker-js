@@ -189,17 +189,6 @@ class DatePickerJS extends HTMLElement {
         this.btnYearForth = this.html.querySelector('#btnYearForth');
         this.dateInput = this.html.querySelector('#date-input');
         this.btnToday = this.html.querySelector('#btnToday');
-
-        let monday = this.today.minus({
-            days: this.today.weekday - 1
-        });
-        for (let i = 0; i < 7; i++) {
-            let span = document.createElement('span');
-            span.innerText = monday.plus({
-                days: i
-            }).setLocale(this.locale).toFormat('EEEEE');
-            this.weekdaysHTMLContainer.appendChild(span);
-        }
     }
 
     prepareListeners() {
@@ -236,6 +225,7 @@ class DatePickerJS extends HTMLElement {
     refreshUI() {
         this.removeAllChildren(this.daysHTMLContainer);
         this.removeAllChildren(this.weeksHTMLContainer);
+        this.removeAllChildren(this.weekdaysHTMLContainer);
         this.monthTitle.innerText = this.currMonth.setLocale(this.locale).toLocaleString({
             month: 'long',
             year: 'numeric'
@@ -246,6 +236,17 @@ class DatePickerJS extends HTMLElement {
             });
             if (i % 7 == 0) this.addWeek(day.weekNumber);
             this.addDay(day);
+        }
+        this.weekdaysHTMLContainer.appendChild(document.createElement('span'));
+        let monday = this.today.minus({
+            days: this.today.weekday - 1
+        });
+        for (let i = 0; i < 7; i++) {
+            let span = document.createElement('span');
+            span.innerText = monday.plus({
+                days: i
+            }).setLocale(this.locale).toFormat('EEEEE');
+            this.weekdaysHTMLContainer.appendChild(span);
         }
     }
 
@@ -416,6 +417,7 @@ class DatePickerJS extends HTMLElement {
 
     setLocale(locale) {
         this.locale = locale;
+        this.refreshUI();
     }
 
 }
