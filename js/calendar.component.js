@@ -1,10 +1,10 @@
 class DatePickerJS extends HTMLElement {
 
-    locale = 'es';
-    events = [];
-
     constructor() {
         super();
+
+        this.locale = 'es';
+        this.events = [];
 
         let html = this.attachShadow({
             mode: 'open'
