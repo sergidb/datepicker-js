@@ -1,6 +1,7 @@
 class DatePickerJS extends HTMLElement {
 
     locale = 'es';
+    events = [];
 
     constructor() {
         super();
@@ -14,7 +15,7 @@ class DatePickerJS extends HTMLElement {
             <style>
                 @import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
 
-                .gray { color: #E5E5E5; }
+                .gray { color: #C5C5C5; }
                 
                 button:focus {outline:0;}
                 button {
@@ -55,17 +56,58 @@ class DatePickerJS extends HTMLElement {
                 .calendar-content {
                     display: grid;
                     grid-template-columns: repeat(8, minmax(30px, 1fr));
-                    grid-template-rows: repeat(6, minmax(30px, 1fr));
+                    grid-template-rows: 30px repeat(5, minmax(30px, 1fr));
                     align-items: center;
                     justify-content: center;
                 }
                 
-                .calendar-content span {
+                .calendar-content .day-outter {
+                    display: grid;
+                    grid-template-rows: 15px 15px;
+                    padding: 10px;
+                    cursor: pointer;
+                }
+
+                .calendar-content .day-outter .day {
+                    justify-self: center;
+                    grid-row: span 1;
+                    align-self: flex-start;
+                }
+
+                .calendar-content .day-outter .day:only-child {
+                    justify-self: center;
+                    grid-row: span 2;
+                    align-self: center;
+                }
+
+                .calendar-content .day-outter .event-mark {
+                    justify-self: center;
+                    align-self: flex-end;
+                }
+
+                .event-mark {
+                    height: 5px;
+                    width: 5px;
+                    align-self: center;
+                    justify-self: center;
+                    border-radius: 50%;
+                    background: #333;
+                }
+
+                .selection-date .event-mark, .today .event-mark {
+                    background: #FFFFFF;
+                }
+
+                
+
+                /*
+                .calendar-content .day {
                     align-self: center;
                     justify-content: center;
                     text-align: center;
                     padding: 10px;
                 }
+                */
                 
                 .calendar-footer {
                     display: flex;
@@ -83,6 +125,12 @@ class DatePickerJS extends HTMLElement {
                     font-style: italic;
                     font-size: 12px;
                 }
+
+                .calendar-content-weeknumbers span {
+                    display: flex;
+                    align-self: center;
+                    justify-content: center;
+                }
                 
                 .calendar-content-weekdays {
                     display: grid;
@@ -90,6 +138,12 @@ class DatePickerJS extends HTMLElement {
                     height: 100%;
                     grid-column: span 8;
                     color: #555;
+                }
+
+                .calendar-content-weekdays span {
+                    display: flex;
+                    align-self: center;
+                    justify-content: center;
                 }
                 
                 .calendar-content-days {
@@ -101,25 +155,21 @@ class DatePickerJS extends HTMLElement {
                     grid-row: span 6;
                     color: #555;
                 }
-                
-                .day {
-                    cursor: pointer;
-                }
 
                 .today {
-                    background: #E63946;
+                    background: #D32F2F;
                     border-radius: 65% 30% 30% 70% / 60% 40% 60% 40% !important;
                     color: white;
                 }
 
                 .selection-date {
-                    background-color: #457B9D;
+                    background-color: #3F51B5;
                     color: #F1FAEE;
                     border-radius: 0 !important;
                 }
 
                 .today.selection-date {
-                    background-color: #E63946;
+                    background-color: #D32F2F;
                     border-radius: 5px;
                 }
 
@@ -254,38 +304,49 @@ class DatePickerJS extends HTMLElement {
     }
 
     addDay(date) {
+
+        let outter = document.createElement('div');
+        outter.classList.add('day-outter');
+
         let number = date.day;
         let isCurrMonth = date.month == this.currMonth.month;
         let span = document.createElement('span');
         span.innerText = number;
         span.classList.add('day');
-        span.onclick = e => this.onDateClicked(e, date, span);
-        // span.id = `cal-day-${date.toISODate()}`;
+        outter.onclick = e => this.onDateClicked(e, date, span);
 
         if (this.selectionInterval && !this.selectionInterval.invalid) {
 
-            if(this.selectionInterval.contains(date) || date.equals(this.selectionInterval.end)) span.classList.add('selection-date');
+            if(this.selectionInterval.contains(date) || date.equals(this.selectionInterval.end)) outter.classList.add('selection-date');
 
             if(this.selectionInterval.isEmpty()) {
                 if(date.equals(this.selectionInterval.start))
-                    span.classList.add('selection-only-date');
+                    outter.classList.add('selection-only-date');
             } else {
                 if(date.equals(this.selectionInterval.start)) {
                     let className = this.selectionInterval.count('days') >= 8 ? 'big-selection-first-date' : 'selection-first-date';
-                    span.classList.add(className);
+                    outter.classList.add(className);
                 }
                 if(date.equals(this.selectionInterval.end)) {
                     let className = this.selectionInterval.count('days') >= 8 ? 'big-selection-last-date' : 'selection-last-date';
-                    span.classList.add(className);
+                    outter.classList.add(className);
                 }
             }
 
         }
 
-        if (date.equals(this.today)) span.classList.add('today');
+        if (date.equals(this.today)) outter.classList.add('today');
         if (!isCurrMonth) span.classList.add('gray');
 
-        this.daysHTMLContainer.appendChild(span);
+        outter.appendChild(span);
+        
+        if (this.getEvents(date).length > 0) {
+            let eventMark = document.createElement('div');
+            eventMark.classList.add('event-mark');
+            outter.appendChild(eventMark);
+        }
+
+        this.daysHTMLContainer.appendChild(outter);
     }
 
     addWeek(number) {
@@ -433,6 +494,18 @@ class DatePickerJS extends HTMLElement {
     }
 
     onselectionchanged(dateFrom, dateTo) {}
+
+    addEvent(date, event) {
+        let isoDate = date.toISODate();
+        if (!this.events[isoDate]) this.events[isoDate] = [];
+        this.events[isoDate].push(event);
+        this.refreshUI();
+    }
+    
+    getEvents(date) {
+        let isoDate = date.toISODate();
+        return this.events[isoDate] || [];
+    }
 
 }
 
