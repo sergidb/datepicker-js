@@ -64,8 +64,9 @@ class DatePickerJS extends HTMLElement {
                 .calendar-content .day-outter {
                     display: grid;
                     grid-template-rows: 15px 15px;
-                    padding: 10px;
+                    padding: 5px 10px;
                     cursor: pointer;
+                    margin-top: 6px;
                 }
 
                 .calendar-content .day-outter .day {
