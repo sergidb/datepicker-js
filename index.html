@@ -31,7 +31,7 @@
             align-self: center;
 
             width: 700px;
-            max-height: 400px;
+            max-height: 440px;
             min-height: 400px;
 
             padding: 20px;
@@ -66,13 +66,25 @@
 
         }
 
+        .language-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .language-controls input {
+            width: 30px;
+            text-align: center;
+        }
+
         .shadow {
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
             transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
         }
 
         datepicker-js {
-            grid-row: span 2;
+            /* grid-row: span 2; */
             margin: 0 auto;
         }
 
@@ -82,6 +94,14 @@
             color: #777;
             font-weight: normal;
             font-style: italic;
+        }
+
+        #setLocaleBtn {
+            border: none;
+            padding: 3px 13px;
+            background: #455A64;
+            color: white;
+            border-radius: 4px;
         }
 
         @media only screen and (max-width: 768px) {
@@ -97,7 +117,6 @@
                 max-height: none;
             }
         }
-
     </style>
 
 </head>
@@ -106,8 +125,13 @@
 
     <div class="grid shadow">
         <h1>Orders</h1>
-        <datepicker-js></datepicker-js>
+        <div class="language-controls">
+            Change locale:
+            <input id="localeInput" type="text" value="en">
+            <button id="setLocaleBtn">set</button>
+        </div>
         <ul></ul>
+        <datepicker-js></datepicker-js>
     </div>
 
 
@@ -264,10 +288,20 @@
         datepicker.setLocale('en');
 
         fakeData.forEach(fakeEvent => {
-            fakeEvent.date = luxon.DateTime.local().startOf('day').minus({days: randomOf5()});
+            fakeEvent.date = luxon.DateTime.local().startOf('day').minus({
+                days: randomOf5()
+            });
             datepicker.addEvent(fakeEvent.date, fakeEvent);
         });
-        
+
+        document.querySelector('#localeInput').onkeyup = e => {
+            if (e.key == 'Enter') updateLocale();
+        }
+
+        document.querySelector('#setLocaleBtn').onclick = e => {
+            updateLocale();
+        }
+
         renderList([]);
 
         datepicker.onselectionchanged = e => {
@@ -313,6 +347,10 @@
 
         }
 
+        function updateLocale() {
+            let locale = document.querySelector('#localeInput').value;
+            datepicker.setLocale(locale);
+        }
     </script>
 
 </body>

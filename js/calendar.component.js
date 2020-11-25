@@ -87,19 +87,17 @@ class DatePickerJS extends HTMLElement {
                 }
 
                 .event-mark {
-                    height: 5px;
-                    width: 5px;
+                    height: 7px;
+                    width: 7px;
                     align-self: center;
                     justify-self: center;
                     border-radius: 50%;
-                    background: #333;
+                    background: #455A64;
                 }
 
                 .selection-date .event-mark, .today .event-mark {
                     background: #FFFFFF;
                 }
-
-                
 
                 /*
                 .calendar-content .day {
